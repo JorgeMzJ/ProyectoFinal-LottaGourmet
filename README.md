@@ -46,7 +46,7 @@ private $password = "bf86ph1n";
 
 ## Instalación
 
-### Cambiar el nombre de la carpeta a `PastelesUPBC` o `Lottagourmet`
+### Cambiar el nombre de la carpeta a `PastelesUPBC` (para mayor comodidad al momento de probar)
 
 1. Clonar/copiar el proyecto en `C:\xampp\htdocs\PastelesUPBC`
 
