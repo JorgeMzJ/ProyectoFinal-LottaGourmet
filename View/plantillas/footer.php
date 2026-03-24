@@ -5,10 +5,10 @@
     </footer>
 
     <!-- Modal del Carrito (global) -->
-    <div id="carritoModal" class="modal">
+    <div id="carritoModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="carritoTitulo" aria-hidden="true" tabindex="-1">
         <div class="modal-contenido">
-            <span class="cerrar">&times;</span>
-            <h2>Carrito de Compras</h2>
+            <button class="cerrar" aria-label="Cerrar carrito" style="background:none; border:none; font-size: 28px; cursor: pointer; color: #555; position: absolute; right: 16px; top: 16px;">&times;</button>
+            <h2 id="carritoTitulo">Carrito de Compras</h2>
             <div id="carritoContenedor">
                 <!-- Los productos del carrito se agregarán aquí -->
             </div>
@@ -18,7 +18,7 @@
     </div>
 
     <script src="<?php echo BASE_URL; ?>Public/js/script.js?v=2.0"></script>
-    <script src="<?php echo BASE_URL; ?>Public/js/carrito.js?v=1.0"></script>
+    <script src="<?php echo BASE_URL; ?>Public/js/carrito.js?v=1.1"></script>
 
 </body>
 </html>

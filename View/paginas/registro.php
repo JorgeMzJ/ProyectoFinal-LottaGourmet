@@ -59,14 +59,8 @@ $success = isset($_GET['success']) || isset($_SESSION['registro_success']);
             <input type="password" id="confirmPassword" name="confirmPassword" required class="input-password">
         </div>
 
-        <div class="form-group checkbox-group">
-            <label>
-                <input type="checkbox" id="terminos" name="terminos" required <?php echo (isset($old['terminos']) && $old['terminos'])? 'checked':''; ?>>
-                Acepto los términos y condiciones
-            </label>
-        </div>
 
-        <button type="submit" class="btn-submit">Registrarse</button>
+        <button type="submit" class="btn-primary">Registrarse</button>
     </form>
 
 </main>

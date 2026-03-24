@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>Public/css/styles.css?v=2.5">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>Public/css/styles.css?v=3.0">
     <script src="<?php echo BASE_URL; ?>Public/js/custom-modal.js?v=1.1"></script>
     <base href="<?php echo BASE_URL; ?>">
     <script>
@@ -166,8 +166,8 @@
         .header-principal.admin .header-left { margin: 0 auto; text-align: center; }
         .header-principal.admin .header-logo { display: none; }
         .admin-nav-left { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); z-index: 10; }
-        .btn-admin-home { display: inline-block; background: #3b82f6; color: #fff; border: none; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); transition: all 0.2s; }
-        .btn-admin-home:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); }
+        .btn-admin-home { display: inline-block; background: #2563eb; color: #fff; border: none; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3); transition: all 0.2s; }
+        .btn-admin-home:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4); }
         .btn-return { display:inline-block; background:#fff; border:1px solid #e1e6ef; padding:8px 12px; border-radius:8px; text-decoration:none; color:#1f2b46; font-weight:700; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
         .btn-return:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,0.08); }
         </style>

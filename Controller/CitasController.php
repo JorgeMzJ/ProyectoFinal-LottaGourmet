@@ -59,12 +59,23 @@ class CitasController {
 
         // Normalizar productos seleccionados: pares id => cantidad
         $items = [];
+        $totalItems = 0;
         for ($i = 0; $i < count($product_ids); $i++) {
             $pid = (int)$product_ids[$i];
             $qty = isset($cantidades[$i]) ? (int)$cantidades[$i] : 0;
+            
             if ($pid > 0 && $qty > 0) {
+                if ($qty > 25) {
+                    $errors[] = 'Alcanzaste el límite de 25 unidades de un mismo producto.';
+                    break;
+                }
                 $items[] = ['id' => $pid, 'cantidad' => $qty];
+                $totalItems += $qty;
             }
+        }
+
+        if ($totalItems > 100) {
+            $errors[] = 'El pedido excede el límite de 100 productos en total.';
         }
 
         if (empty($items)) $errors[] = 'Debes indicar cantidad (>0) para al menos un producto.';
@@ -86,12 +97,25 @@ class CitasController {
             }
             $id_usuario = $_SESSION['usuario_id'];
 
+            // Calcular multiplicador de descuento basado en el volumen total
+            $descuentoMultiplier = 1.0;
+            $notaDescuento = '';
+            
+            if ($totalItems >= 24) {
+                $descuentoMultiplier = 0.90; // 10% de descuento
+                $notaDescuento = 'Aplicado 10% de descuento automático por volumen (>= 24 unidades).';
+            } elseif ($totalItems >= 12) {
+                $descuentoMultiplier = 0.95; // 5% de descuento
+                $notaDescuento = 'Aplicado 5% de descuento automático por volumen (>= 12 unidades).';
+            }
+
             // Insertar pedido directamente con el usuario logueado
-            $pstmt = $db->prepare('INSERT INTO pedidos (id_usuario, tipoEvento, fechaEvento) VALUES (:id_usuario, :tipoEvento, :fechaEvento)');
+            $pstmt = $db->prepare('INSERT INTO pedidos (id_usuario, tipoEvento, fechaEvento, notas) VALUES (:id_usuario, :tipoEvento, :fechaEvento, :notas)');
             $pstmt->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
             $pstmt->bindValue(':tipoEvento', $tipoEvento);
             if ($fechaEvento === '') $fechaEvento = null;
             $pstmt->bindValue(':fechaEvento', $fechaEvento);
+            $pstmt->bindValue(':notas', $notaDescuento);
             $pstmt->execute();
             $id_pedido = $db->lastInsertId();
 
@@ -103,12 +127,14 @@ class CitasController {
                 $getPrice->bindValue(':id', $it['id'], PDO::PARAM_INT);
                 $getPrice->execute();
                 $prod = $getPrice->fetch(PDO::FETCH_ASSOC);
-                $precio = $prod ? $prod['precio'] : 0;
+                
+                $precioOriginal = $prod ? (float)$prod['precio'] : 0;
+                $precioConDescuento = $precioOriginal * $descuentoMultiplier;
 
                 $insDetalle->bindValue(':id_pedido', $id_pedido, PDO::PARAM_INT);
                 $insDetalle->bindValue(':id_producto', $it['id'], PDO::PARAM_INT);
                 $insDetalle->bindValue(':cantidad', $it['cantidad'], PDO::PARAM_INT);
-                $insDetalle->bindValue(':precio_unitario', $precio);
+                $insDetalle->bindValue(':precio_unitario', $precioConDescuento);
                 $insDetalle->execute();
             }
 

@@ -31,13 +31,13 @@ $success = isset($_GET['success']) || isset($_SESSION['login_success']);
     <form action="<?php echo BASE_URL; ?>login/validar" method="post" id="loginForm" novalidate>
         <div class="form-group">
             <label for="email">Correo electrónico:</label>
-            <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($old['email'] ?? ''); ?>">
+            <input type="email" id="email" name="email" required style="width: 100%; box-sizing: border-box;" value="<?php echo htmlspecialchars($old['email'] ?? ''); ?>">
         </div>
         <div class="form-group">
             <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" required class="input-password">
         </div>
-        <button type="submit" class="btn-submit">Iniciar Sesión</button>
+        <button type="submit" class="btn-primary">Iniciar Sesión</button>
     </form>
 </main>
 <?php unset($_SESSION['login_errors'], $_SESSION['login_old'], $_SESSION['login_success']); ?>

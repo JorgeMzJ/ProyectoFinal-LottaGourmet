@@ -98,27 +98,70 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    let ultimoElementoEnfocado;
+
+    function abrirModal() {
+        if (!modal) return;
+        ultimoElementoEnfocado = document.activeElement;
+        modal.style.display = "block";
+        modal.setAttribute('aria-hidden', 'false');
+        actualizarCarrito();
+        
+        // Enfocar el modal o su botón de cerrar para atrapar la navegación
+        if (spanCerrar && typeof spanCerrar.focus === 'function') {
+            spanCerrar.focus();
+        } else {
+            modal.focus();
+        }
+    }
+
+    function cerrarModal() {
+        if (!modal) return;
+        modal.style.display = "none";
+        modal.setAttribute('aria-hidden', 'true');
+        if (ultimoElementoEnfocado && typeof ultimoElementoEnfocado.focus === 'function') {
+            ultimoElementoEnfocado.focus();
+        }
+    }
+
     if (btnVerCarrito && modal) {
-        btnVerCarrito.addEventListener('click', function() {
-            modal.style.display = "block";
-            actualizarCarrito();
-        });
+        btnVerCarrito.addEventListener('click', abrirModal);
     }
     if (btnHeaderCarrito && modal) {
-        btnHeaderCarrito.addEventListener('click', function() {
-            modal.style.display = "block";
-            actualizarCarrito();
-        });
+        btnHeaderCarrito.addEventListener('click', abrirModal);
     }
     if (spanCerrar && modal) {
-        spanCerrar.addEventListener('click', function() {
-            modal.style.display = "none";
-        });
+        spanCerrar.addEventListener('click', cerrarModal);
     }
     if (modal) {
-        window.addEventListener('click', function(event) {
+        modal.addEventListener('click', function(event) {
             if (event.target == modal) {
-                modal.style.display = "none";
+                cerrarModal();
+            }
+        });
+        
+        modal.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' || event.keyCode === 27) {
+                cerrarModal();
+                event.preventDefault();
+            } else if (event.key === 'Tab' || event.keyCode === 9) {
+                const focusableElements = modal.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])');
+                if (focusableElements.length === 0) return;
+                
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+                
+                if (event.shiftKey) { // Shift + Tab
+                    if (document.activeElement === firstElement || document.activeElement === modal) {
+                        lastElement.focus();
+                        event.preventDefault();
+                    }
+                } else { // Tab
+                    if (document.activeElement === lastElement) {
+                        firstElement.focus();
+                        event.preventDefault();
+                    }
+                }
             }
         });
     }

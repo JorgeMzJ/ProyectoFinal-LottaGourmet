@@ -26,7 +26,6 @@ class RegistroController {
         $telefono = trim($_POST['telefono'] ?? '');
         $password = $_POST['password'] ?? '';
         $confirm = $_POST['confirmPassword'] ?? '';
-        $terminos = isset($_POST['terminos']);
 
         $old = [
             'nombre' => $nombre,
@@ -44,7 +43,6 @@ class RegistroController {
             }
             if (strlen($password) < 6) $errors['password'] = 'La contraseña debe tener al menos 6 caracteres.';
             if ($password !== $confirm) $errors['confirmPassword'] = 'Las contraseñas no coinciden.';
-            if (!$terminos) $errors['terminos'] = 'Debes aceptar términos y condiciones.';
         }
 
         if (!empty($errors)) {
