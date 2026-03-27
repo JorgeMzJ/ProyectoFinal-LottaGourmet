@@ -84,7 +84,7 @@
 .input-password {
     padding: 10px 12px;
     border-radius: 8px;
-    border: 2px solid #880E4F;
+    border: 2px solid var(--accent);
     background: #fff;
     font-size: 1em;
     color: #C44569;
@@ -233,7 +233,7 @@ h6 {
 .producto-precio {
     font-size: 1.3em;
     font-weight: 700;
-    color: #880E4F;
+    color: var(--accent);
     font-family: 'Comfortaa', sans-serif;
 }
 
@@ -246,7 +246,7 @@ h6 {
 }
 
 .btn-pedir {
-    background-color: #880E4F;
+    background-color: var(--accent);
     color: white;
     padding: 10px 16px;
     text-decoration: none;
@@ -260,7 +260,7 @@ h6 {
 }
 
 .btn-pedir:hover {
-    background-color: #880E4F;
+    background-color: var(--accent);
 }
 
 .menu-contenedor {
@@ -285,7 +285,8 @@ h6 {
 /* --- Layout y header --- */
 :root {
     --primary: #fdcfd6;
-    --accent: #880E4F;
+    /* --accent: #880E4F; */
+    --accent: #1976d2;
     --muted: #f4f4f4;
     --bg: #fffdf8;
     --header-height: 64px;
@@ -478,7 +479,7 @@ h6 {
 }
 
 .btn-primary:hover {
-    background: #880E4F;
+    background: var(--accent);
 }
 
 /* Pequeños ajustes visuales generales */
@@ -502,7 +503,7 @@ a {
 
 .header-nav a {
     text-decoration: none;
-    color: #880e4f;
+    color: var(--accent);
     padding: 8px 6px;
     font-weight: 700;
 }
@@ -556,7 +557,7 @@ a {
 }
 
 .carrusel-overlay .btn-promos:hover {
-    background: #880E4F;
+    background: var(--accent);
 }
 
 /* Botón ver más promociones */
@@ -947,7 +948,7 @@ a {
 }
 
 .btn-add-carrito:hover {
-    background: #880E4F;
+    background: var(--accent);
 }
 
 /* Resumen del carrito en el formulario */
@@ -1045,7 +1046,7 @@ a {
 }
 
 .btn-abrir-modal:hover {
-    background: #880E4F;
+    background: var(--accent);
 }
 
 /* Estilos específicos para el botón del carrito en la página de citas */
@@ -1197,7 +1198,7 @@ a {
 }
 
 .menu-search button:hover {
-    background: #880E4F;
+    background: var(--accent);
 }
 
 /* Mobile adjustments for menu header removed */
@@ -1215,7 +1216,7 @@ a {
 }
 
 .btn-ver-carrito:hover {
-    background-color: #880E4F;
+    background-color: var(--accent);
 }
 
 .modal {
