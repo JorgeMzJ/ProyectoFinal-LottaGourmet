@@ -36,14 +36,14 @@
 }
 
 .admin-panel ul li a {
-    color: #1976d2;
+    color: #880E4F;
     text-decoration: none;
     font-weight: 700;
 }
 
 .admin-panel ul li:hover {
     box-shadow: 0 6px 18px rgba(44, 62, 80, 0.13);
-    border-color: #1976d2;
+    border-color: #880E4F;
 }
 
 .admin-table {
@@ -74,7 +74,7 @@
 }
 
 .admin-section-title {
-    color: #1976d2;
+    color: #880E4F;
     font-size: 1.5em;
     margin: 32px 0 18px 0;
     font-weight: 700;
@@ -286,7 +286,7 @@ h6 {
 :root {
     --primary: #fdcfd6;
     /* --accent: #880E4F; */
-    --accent: #1976d2;
+    --accent: #880E4F;
     --muted: #f4f4f4;
     --bg: #fffdf8;
     --header-height: 64px;
@@ -1709,4 +1709,215 @@ a {
     .custom-modal-btn {
         width: 100%;
     }
+}
+
+/* NUEVO LAYOUT: CITAS Y COTIZADOR API */
+
+/* Contenedor principal flexbox */
+.citas-split-layout {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite que colapsen en pantallas chicas */
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* Regla W3C */
+.citas-column {
+    flex: 1 1 calc(50% - 12px);
+    min-width: 320px;
+}
+
+/* TARJETAS DE PAQUETES (Lado Derecho)*/
+.paquetes-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.paquete-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+}
+
+.paquete-card h3 {
+    margin: 0 0 4px 0;
+    font-size: 1.15em;
+    color: #333;
+}
+
+.paquete-desc-corta {
+    margin: 0;
+    font-size: 0.85em;
+    color: #666;
+}
+
+.paquete-card .paquete-precio {
+    font-weight: 800;
+    color: var(--accent);
+    font-size: 1.1em;
+}
+
+.paquete-card:hover {
+    border-color: #b0bec5;
+    background: #f9f9f9;
+    transform: translateY(-2px);
+}
+
+/* Estado activo cuando el usuario hace clic */
+.paquete-card.active {
+    border-color: var(--accent);
+    background: rgba(25, 118, 210, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* TICKET DE COTIZACIÓN (Lado Izquierdo)*/
+.ticket-resumen {
+    margin-top: 20px;
+    background: #fdfbf7;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'Courier New', Courier, monospace;
+    /* Look de ticket */
+    color: #333;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.ticket-resumen h3 {
+    text-align: center;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 8px;
+    margin-top: 0;
+}
+
+.ticket-fila {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 0.95em;
+}
+
+.ticket-total {
+    border-top: 1px dashed #ccc;
+    padding-top: 10px;
+    margin-top: 10px;
+    font-weight: 800;
+    font-size: 1.2em;
+    text-align: right;
+    color: var(--accent);
+}
+
+/* ESTRUCTURA INTERNA Y PASTEL DINÁMICO */
+.citas-inner-split {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.citas-form-col {
+    flex: 1 1 300px;
+    /* Columna izquierda (Formularios/Tarjetas) */
+}
+
+.citas-visual-col {
+    flex: 1 1 300px;
+    /* Columna derecha (Pastel/Detalles) */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- DIBUJO DEL PASTEL CON CSS --- */
+.pastel-ilustracion {
+    width: 200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.pastel-capa {
+    width: 100%;
+    border-radius: 8px;
+    transition: background-color 0.4s ease;
+}
+
+.cobertura {
+    height: 40px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    z-index: 3;
+    box-shadow: inset 0 -5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.relleno {
+    height: 15px;
+    width: 95%;
+    z-index: 2;
+}
+
+.pan {
+    height: 60px;
+    z-index: 1;
+    box-shadow: inset 0 -10px 15px rgba(0, 0, 0, 0.05);
+}
+
+.base-pastel {
+    width: 120%;
+    height: 10px;
+    background: #8f8f8f;
+    background: linear-gradient(to right, #ccc, #eee, #ccc);
+    border-radius: 50%;
+    margin-top: -5px;
+    z-index: 0;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Colores Dinámicos del Pastel */
+.cobertura.crema {
+    background-color: #fffdd0;
+    border: 2px solid #eee;
+}
+
+.cobertura.fondant {
+    background-color: #a2d2ff;
+}
+
+.cobertura.chocolate {
+    background-color: #3e2723;
+}
+
+.relleno.fresa {
+    background-color: #ff8a80;
+}
+
+.relleno.nutella {
+    background-color: #4e342e;
+}
+
+.relleno.cajeta {
+    background-color: #d84315;
+}
+
+.pan.vainilla {
+    background-color: #ffe082;
+}
+
+.pan.chocolate {
+    background-color: #5d4037;
+}
+
+.pan.zanahoria {
+    background-color: #ffb74d;
+    border: 2px dashed #f57c00;
 }
