@@ -63,7 +63,7 @@ class Database {
 ?>
 ```
 
-**Para Despliegue en Producción (ByetHost):**
+**Para Despliegue en Producción (ByetHost): OLD**
 ```php
 <?php
 class Database {
