@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const CART_KEY = 'pastelesupbc_carrito';
+    const CART_KEY = 'lottagourmet_carrito';
     const cargarCarrito = () => {
         try {
             const raw = localStorage.getItem(CART_KEY);
@@ -378,7 +378,7 @@ function agregarAlCarrito(producto) {
     }
 });
 window.addEventListener('storage', function(e) {
-    if (e.key !== 'pastelesupbc_carrito') return;
+    if (e.key !== 'lottagourmet_carrito') return;
     try {
         const nueva = e.newValue ? JSON.parse(e.newValue) : [];
         if (window.document && typeof window.document.getElementById === 'function') {
