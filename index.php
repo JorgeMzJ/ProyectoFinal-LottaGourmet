@@ -51,6 +51,12 @@ if (isset($url[0]) && !empty($url[0])) {
                 $metodo = 'guardarPaquete';
             } elseif ($url[1] === 'confirmar-paquete') {
                 $metodo = 'confirmarPaquete';
+            } elseif ($url[1] === 'crearStripeSession') {
+                $metodo = 'crearStripeSession';
+            } elseif ($url[1] === 'crearStripeSessionPaquete') {
+                $metodo = 'crearStripeSessionPaquete';
+            } elseif ($url[1] === 'stripe-success') {
+                $metodo = 'stripeSuccess';
             } else {
                 $metodo = $url[1];
             }
@@ -70,6 +76,17 @@ if (isset($url[0]) && !empty($url[0])) {
         $controlador = 'PaginasController';
         $metodo = 'nosotros';
     }
+
+     // habilitar ruta http://localhost/PastelesUPBC/api/cotizar
+    elseif ($url[0] == 'api' && isset($url[1])) {
+        $controlador = 'ApiController';
+        if ($url[1] == 'cotizar') {
+            $metodo = 'cotizar';
+        } elseif ($url[1] == 'opciones') {
+            $metodo = 'opciones';
+        }
+    }
+    
     elseif ($url[0] == 'admin') {
         $controlador = 'AdminController';
         $metodo = isset($url[1]) && !empty($url[1]) ? $url[1] : 'panel';
@@ -85,7 +102,11 @@ if (isset($url[0]) && !empty($url[0])) {
     }
     elseif ($url[0] == 'compras') {
         $controlador = 'ComprasController';
-        $metodo = isset($url[1]) && !empty($url[1]) ? $url[1] : 'confirmar';
+        if (isset($url[1]) && $url[1] === 'stripe-success') {
+            $metodo = 'stripeSuccess';
+        } else {
+            $metodo = isset($url[1]) && !empty($url[1]) ? $url[1] : 'confirmar';
+        }
     }
 }
 

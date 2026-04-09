@@ -1,0 +1,1 @@
+{"version":2,"defects":{"CitasValidatorTest::testSeleccionDeProductoRequerida":7},"times":{"CitasValidatorTest::testNombreEsRequerido":0.011,"CitasValidatorTest::testEmailInvalido":0,"CitasValidatorTest::testSeleccionDeProductoRequerida":0}}

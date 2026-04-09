@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # If your app is in a subfolder, set RewriteBase to that folder (example: /PastelesUPBC/)
+    # RewriteBase /
+
+    # Don't rewrite existing files or directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Route everything else to index.php and pass the request as the `url` parameter
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+</IfModule>
+
+# If mod_rewrite is not available, the app still works using index.php?url=... links
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirige todo el tráfico a index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+</IfModule>

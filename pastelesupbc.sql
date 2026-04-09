@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-11-2025 a las 02:56:48
+-- Tiempo de generación: 09-04-2026 a las 03:47:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -61,7 +61,16 @@ INSERT INTO `compras` (`id_compra`, `fecha`, `total`, `nombre_cliente`, `email_c
 (26, '2025-11-22 01:34:01', 740.00, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com'),
 (27, '2025-11-22 01:37:30', 740.00, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com'),
 (28, '2025-11-22 01:38:14', 740.00, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com'),
-(29, '2025-11-22 01:43:54', 740.00, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com');
+(29, '2025-11-22 01:43:54', 740.00, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com'),
+(30, '2025-11-22 02:02:27', 840.00, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com'),
+(31, '2025-11-22 02:14:47', 975.00, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com'),
+(32, '2025-12-03 18:32:47', 2700.00, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com'),
+(33, '2025-12-03 18:33:05', 3200.00, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com'),
+(34, '2025-12-03 18:37:28', 1750.00, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com'),
+(35, '2026-04-09 00:57:57', 390.00, 'test', 'test@gmail.com'),
+(36, '2026-04-09 01:15:32', 635.00, 'test', 'test@gmail.com'),
+(37, '2026-04-09 01:31:55', 405.00, 'test', 'test@gmail.com'),
+(38, '2026-04-09 01:33:39', 685.00, 'test', 'test@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -127,7 +136,16 @@ INSERT INTO `compra_detalles` (`id_detalle`, `id_compra`, `id_producto`, `cantid
 (56, 28, 11, 1, 200.00),
 (57, 28, 1, 1, 180.00),
 (58, 29, 11, 1, 200.00),
-(59, 29, 1, 3, 180.00);
+(59, 29, 1, 3, 180.00),
+(60, 30, 14, 4, 210.00),
+(61, 31, 21, 5, 195.00),
+(62, 32, 1, 15, 180.00),
+(63, 33, 11, 16, 200.00),
+(64, 34, 3, 10, 175.00),
+(65, 35, 24, 1, 390.00),
+(66, 36, 24, 1, 635.00),
+(67, 37, 24, 1, 405.00),
+(68, 38, 24, 1, 685.00);
 
 -- --------------------------------------------------------
 
@@ -158,7 +176,20 @@ INSERT INTO `detalle_pedidos` (`id_detalle`, `id_pedido`, `id_producto`, `cantid
 (51, 22, 17, 5, 146.67),
 (52, 22, 14, 5, 146.67),
 (53, 23, 15, 7, 160.00),
-(54, 23, 10, 6, 160.00);
+(54, 23, 10, 6, 160.00),
+(55, 24, 15, 5, 146.67),
+(56, 24, 17, 5, 146.67),
+(57, 24, 14, 5, 146.67),
+(58, 25, 7, 3, 140.00),
+(59, 25, 11, 3, 140.00),
+(60, 26, 15, 7, 160.00),
+(61, 26, 10, 6, 160.00),
+(62, 27, 15, 7, 160.00),
+(63, 27, 10, 6, 160.00),
+(64, 28, 15, 7, 160.00),
+(65, 28, 10, 6, 160.00),
+(66, 34, 24, 1, 365.00),
+(67, 35, 24, 1, 405.00);
 
 -- --------------------------------------------------------
 
@@ -239,19 +270,37 @@ CREATE TABLE `pedidos` (
   `tipoEvento` varchar(100) DEFAULT NULL,
   `fechaEvento` date DEFAULT NULL,
   `notas` text DEFAULT NULL,
-  `id_paquete` int(11) DEFAULT NULL
+  `id_paquete` int(11) DEFAULT NULL,
+  `es_personalizado` tinyint(1) DEFAULT 0,
+  `pan_personalizado` varchar(50) DEFAULT NULL,
+  `relleno_personalizado` varchar(50) DEFAULT NULL,
+  `cobertura_personalizada` varchar(50) DEFAULT NULL,
+  `ingredientes_omitidos` varchar(255) DEFAULT NULL,
+  `total_cotizado` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pedidos`
 --
 
-INSERT INTO `pedidos` (`id_pedido`, `id_usuario`, `fecha`, `tipoEvento`, `fechaEvento`, `notas`, `id_paquete`) VALUES
-(19, 3, '2025-11-11 15:55:36', 'Boda', '2025-12-06', 'Decoraci??n especial', 1),
-(20, 3, '2025-11-16 15:55:36', 'Cumplea??os', '2025-11-29', 'Tema infantil', 2),
-(21, 3, '2025-11-19 15:55:36', 'Corporativo', '2025-11-26', 'Logo de empresa', NULL),
-(22, 3, '2025-11-21 16:21:00', 'Cumpleaños', '2025-11-28', 'que no tengan nueces', 2),
-(23, 2, '2025-11-21 16:24:36', 'Boda', '2025-12-04', '', 3);
+INSERT INTO `pedidos` (`id_pedido`, `id_usuario`, `fecha`, `tipoEvento`, `fechaEvento`, `notas`, `id_paquete`, `es_personalizado`, `pan_personalizado`, `relleno_personalizado`, `cobertura_personalizada`, `ingredientes_omitidos`, `total_cotizado`) VALUES
+(19, 3, '2025-11-11 15:55:36', 'Boda', '2025-12-06', 'Decoraci??n especial', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(20, 3, '2025-11-16 15:55:36', 'Cumplea??os', '2025-11-29', 'Tema infantil', 2, 0, NULL, NULL, NULL, NULL, NULL),
+(21, 3, '2025-11-19 15:55:36', 'Corporativo', '2025-11-26', 'Logo de empresa', NULL, 0, NULL, NULL, NULL, NULL, NULL),
+(22, 3, '2025-11-21 16:21:00', 'Cumpleaños', '2025-11-28', 'que no tengan nueces', 2, 0, NULL, NULL, NULL, NULL, NULL),
+(23, 2, '2025-11-21 16:24:36', 'Boda', '2025-12-04', '', 3, 0, NULL, NULL, NULL, NULL, NULL),
+(24, 3, '2025-11-21 18:03:11', 'Cumpleaños', '2025-12-10', 'que no tenga pastel', 2, 0, NULL, NULL, NULL, NULL, NULL),
+(25, 3, '2025-11-21 18:15:39', 'Cumpleaños', '2025-12-06', 'que solo tenga leche deslactosada', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(26, 3, '2025-12-03 10:37:38', 'Boda', '2025-12-03', '', 3, 0, NULL, NULL, NULL, NULL, NULL),
+(27, 3, '2025-12-03 10:45:13', 'Boda', '2025-12-03', '', 3, 0, NULL, NULL, NULL, NULL, NULL),
+(28, 3, '2025-12-03 10:45:21', 'Boda', '2025-12-02', '', 3, 0, NULL, NULL, NULL, NULL, NULL),
+(29, 5, '2026-04-08 18:25:55', 'Personalizado', '2026-04-23', '', NULL, 1, 'Vainilla', 'Fresa', 'Crema', 'Ninguno', 420.00),
+(30, 5, '2026-04-08 18:25:59', 'Personalizado', '2026-04-23', '', NULL, 1, 'Vainilla', 'Fresa', 'Crema', 'Ninguno', 420.00),
+(31, 5, '2026-04-08 18:26:06', 'Personalizado', '2026-04-23', '', NULL, 1, 'Vainilla', 'Fresa', 'Crema', 'Almendra', 405.00),
+(32, 5, '2026-04-08 18:28:08', 'Personalizado', '2026-04-23', '', NULL, 1, 'Vainilla', 'Fresa', 'Crema', 'Almendra', 405.00),
+(33, 5, '2026-04-08 18:28:11', 'Personalizado', '2026-04-23', '', NULL, 1, 'Vainilla', 'Fresa', 'Crema', 'Almendra', 405.00),
+(34, 5, '2026-04-08 18:37:57', 'Personalizado', '2026-09-01', 'A ver si funciona', NULL, 1, 'Chocolate', 'Cajeta', 'Fondant', 'Nuez, Almendra, Lactosa', 365.00),
+(35, 5, '2026-04-08 18:40:20', 'Personalizado', '2026-04-24', 'Escribir \"Feliz Cumpleaños\" en el lado.', NULL, 1, 'Chocolate', 'Cajeta', 'Fondant', 'Nuez, Almendra', 405.00);
 
 -- --------------------------------------------------------
 
@@ -275,24 +324,25 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id_producto`, `nombre`, `descripcion`, `precio`, `stock`, `imagen`, `en_promocion`, `precio_oferta`) VALUES
-(1, 'Carlota de Fresa', 'Deliciosa carlota con fresas frescas, crema pastelera y bizcocho esponjoso. Perfecta para cualquier celebración.', 180.00, 15, 'carlota_fresa.jpg', 0, NULL),
+(1, 'Carlota de Fresa', 'Deliciosa carlota con fresas frescas, crema pastelera y bizcocho esponjoso. Perfecta para cualquier celebración.', 180.00, 10, 'carlota_fresa.jpg', 0, NULL),
 (3, 'Carlota de Limón', 'Carlota ácida y deliciosa con limón siciliano, mousse ligero y base de vainilla. Toque cítrico irresistible.', 175.00, 10, 'carlota_limon.jpg', 0, NULL),
 (6, 'Carlota de Piña', 'Tropical carlota con trozos de piña natural, crema de coco y bizcocho húmedo. Sabor del paraíso.', 165.00, 11, 'carlota_pina.jpg', 0, NULL),
 (7, 'Carlota de Vainilla', 'Clásica carlota de vainilla con crema pastelera, bizcocho esponjoso y decoración de chispas de chocolate.', 160.00, 18, 'carlota_vainilla.jpg', 0, NULL),
 (9, 'Carlota de Café', 'Carlota para los amantes del café con espresso italiano, crema de café y galletitas de chocolate.', 170.00, 13, 'carlota_cafe.jpg', 0, NULL),
 (10, 'Carlota de Tres Leches', 'Carlota tipo tres leches con leche condensada, leche evaporada y crema fresca. Clásico reinventado.', 175.00, 11, 'carlota_tres_leches.jpg', 0, NULL),
-(11, 'Pastel de Chocolate', 'Esponjoso pastel de chocolate con ganache de chocolate oscuro y cobertura de cacao. Irresistible para chocolateros.', 220.00, 16, 'pastel_chocolate.jpg', 1, 200.00),
+(11, 'Pastel de Chocolate', 'Esponjoso pastel de chocolate con ganache de chocolate oscuro y cobertura de cacao. Irresistible para chocolateros.', 220.00, 10, 'pastel_chocolate.jpg', 1, 200.00),
 (12, 'Pastel de Zanahoria', 'Pastel de zanahoria con nueces, canela y frosting de queso crema. Saludable y delicioso.', 200.00, 10, 'pastel_zanahoria.jpg', 0, NULL),
 (13, 'Pastel de Vainilla', 'Suave pastel de vainilla con relleno de crema pastelera y cobertura de buttercream. Perfecto para cualquier ocasión.', 190.00, 20, 'pastel_vainilla.jpg', 0, NULL),
 (14, 'Pastel Selva Negra', 'Pastel multicapas con chocolate, cerezas en almíbar, crema chantilly y virutas de chocolate. Clásico elegante.', 240.00, 7, 'pastel_selva_negra.jpg', 1, 210.00),
 (15, 'Pastel de Red Velvet', 'Pastel rojo terciopelado con frosting de queso crema, frambuesas y decoración de pétalos comestibles.', 210.00, 9, 'pastel_red_velvet.jpg', 0, NULL),
-(16, 'Tarta de Limón', 'Tarta cítrica con limón fresco, buttercream de limón y merengue. Refrescante y aromática.', 195.00, 12, 'pastel_limon.jpg', 0, NULL),
+(16, 'Tarta de Limón', 'Tarta cítrica con limón fresco, buttercream de limón y merengue. Refrescante y aromática.', 195.00, 12, 'pastel_limon.jpg', 1, 135.00),
 (17, 'Pastel de Café Moca', 'Pastel capas con café, chocolate y crema mocha. Ideal para después de comidas.', 215.00, 11, 'pastel_moca.jpg', 0, NULL),
 (19, 'Tarta Frutos Rojos', 'Tarta con capas de bizcocho vainilla, crema chantilly y mezcla de frutos rojos frescos. Colorido y delicioso.', 220.00, 10, 'pastel_frutos_rojos.jpg', 0, NULL),
 (20, 'Pastel de Dulce de Leche', 'Pastel clásico relleno de dulce de leche casero, merengue y crocante de nueces. Caramelo puro.', 200.00, 15, 'pastel_dulce_leche.jpg', 0, NULL),
-(21, 'Carlota de Frambuesa', 'Elegante carlota con frambuesas frescas, mousse de frambuesa y base de vainilla. Sabor sofisticado y delicado.', 195.00, 9, 'carlota_frambuesa.jpg', 1, 155.00),
-(22, 'Carlota de Mango', 'Refrescante carlota elaborada con pulpa de mango, crema chantilly y galletas María. Ideal para días calurosos.', 170.00, 12, 'carlota_mango.jpg', 0, NULL),
-(23, 'Carlota de Maracuyá', 'Exótica carlota con maracuyá fresco, mousse ligero y bizcocho de vainilla. Sabor tropical irresistible.', 185.00, 10, 'carlota_maracuya.jpg', 1, 160.00);
+(21, 'Carlota de Frambuesa', 'Elegante carlota con frambuesas frescas, mousse de frambuesa y base de vainilla. Sabor sofisticado y delicado.', 195.00, 9, 'carlota_frambuesa.jpg', 0, NULL),
+(22, 'Carlota de Mango', 'Refrescante carlota elaborada con pulpa de mango, crema chantilly y galletas María. Ideal para días calurosos.', 180.00, 20, 'carlota_mango.jpg', 1, 150.00),
+(23, 'Carlota de Maracuyá', 'Exótica carlota con maracuyá fresco, mousse ligero y bizcocho de vainilla. Sabor tropical irresistible.', 185.00, 10, 'carlota_maracuya.jpg', 0, NULL),
+(24, 'Pedido personalizado Stripe', 'Registro de pedido personalizado generado desde Stripe Checkout.', 0.00, 0, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -316,7 +366,9 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `nombre`, `email`, `telefono`, `password_hash`, `es_admin`, `creado_en`) VALUES
 (2, 'admin', 'admin@gmail.com', '12343567890', '$2y$10$l5D33pnJq5hA6vXWMRcHkO2FKynvm4I9uLbEgqG.qtuZKtZpTPJGy', 1, '2025-11-20 22:02:23'),
-(3, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com', '6864728875', '$2y$10$eC6ZBI7mLZVHk/5qygCNVutTUxmfwsmT3/TICtr6Ox/g8H9RPdyNi', 0, '2025-11-21 00:46:09');
+(3, 'Jorge Esteban Méndez Jaime', 'jemj2006@gmail.com', '6864728875', '$2y$10$eC6ZBI7mLZVHk/5qygCNVutTUxmfwsmT3/TICtr6Ox/g8H9RPdyNi', 0, '2025-11-21 00:46:09'),
+(4, 'telefono', 'telefono@gmail.com', '+526864728875', '$2y$10$Xv8vIytl5MCAsWr.3Z12CeBVyGgeuEDBvAvdeOegEnhfynoPhY7Ri', 0, '2026-04-08 17:40:05'),
+(5, 'test', 'test@gmail.com', '+526864728875', '$2y$10$qQXYmwudO3e1QIh5hK5M6uISqd.KGJedo9CjyLjM.s4X6Z04.LHyG', 0, '2026-04-08 17:55:49');
 
 --
 -- Índices para tablas volcadas
@@ -391,19 +443,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `compras`
 --
 ALTER TABLE `compras`
-  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_compra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `compra_detalles`
 --
 ALTER TABLE `compra_detalles`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedidos`
 --
 ALTER TABLE `detalle_pedidos`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT de la tabla `paquetes_eventos`
@@ -421,7 +473,7 @@ ALTER TABLE `paquete_productos`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -433,7 +485,7 @@ ALTER TABLE `productos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
