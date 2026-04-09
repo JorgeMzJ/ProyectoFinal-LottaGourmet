@@ -1,222 +1,231 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const carritoResumen = document.getElementById('carritoResumen');
-    const form = document.getElementById('citasForm');
-    let carritoCitas = [];
+document.addEventListener('DOMContentLoaded', () => {
+    // LÓGICA DE LA COTIZACIÓN 
+    const selectPan = document.getElementById('api-pan');
+    const selectRelleno = document.getElementById('api-relleno');
+    const selectCobertura = document.getElementById('api-cobertura');
 
-    // --- Lógica para agregar productos al pedido ---
-    document.querySelectorAll('.modal-producto').forEach(productoDiv => {
-        const id = productoDiv.dataset.productId;
-        const nombre = productoDiv.querySelector('.modal-producto-name').textContent;
-        const precio = parseFloat(productoDiv.dataset.price);
+    const capaPan = document.getElementById('capa-pan');
+    const capaRelleno = document.getElementById('capa-relleno');
+    const capaCobertura = document.getElementById('capa-cobertura');
 
-        const btnMinus = productoDiv.querySelector('.btn-qty-minus');
-        const btnPlus = productoDiv.querySelector('.btn-qty-plus');
-
-        btnMinus.addEventListener('click', () => {
-            let itemIndex = carritoCitas.findIndex(p => p.id === id);
-            if (itemIndex > -1) {
-                if (carritoCitas[itemIndex].cantidad > 1) {
-                    carritoCitas[itemIndex].cantidad--;
-                } else {
-                    carritoCitas.splice(itemIndex, 1);
-                }
-                actualizarResumenCarrito();
-            }
-        });
-
-        btnPlus.addEventListener('click', () => {
-            const maxPerProduct = 25;
-            const maxTotal = 100;
-
-            let currentTotal = carritoCitas.reduce((sum, item) => sum + item.cantidad, 0);
-
-            if (currentTotal >= maxTotal) {
-                if (typeof customAlert === 'function') {
-                    customAlert(`Has alcanzado el límite máximo de ${maxTotal} productos por pedido.`, 'Límite alcanzado');
-                } else {
-                    alert(`Has alcanzado el límite máximo de ${maxTotal} productos por pedido.`);
-                }
-                return;
-            }
-
-            let itemIndex = carritoCitas.findIndex(p => p.id === id);
-            if (itemIndex > -1) {
-                if (carritoCitas[itemIndex].cantidad >= maxPerProduct) {
-                    if (typeof customAlert === 'function') {
-                        customAlert(`Puedes pedir un máximo de ${maxPerProduct} unidades de este producto.`, 'Límite alcanzado');
-                    } else {
-                        alert(`Puedes pedir un máximo de ${maxPerProduct} unidades de este producto.`);
-                    }
-                    return;
-                }
-                carritoCitas[itemIndex].cantidad++;
-            } else {
-                carritoCitas.push({ id, nombre, precio, cantidad: 1 });
-            }
-            actualizarResumenCarrito();
-        });
-    });
-
-    function renderAllQuantities() {
-        document.querySelectorAll('.modal-producto').forEach(productoDiv => {
-            const id = productoDiv.dataset.productId;
-            const item = carritoCitas.find(p => p.id === id);
-            const display = productoDiv.querySelector('.qty-display');
-            if (display) {
-                display.textContent = item ? item.cantidad : '0';
-            }
-        });
+    function actualizarPastel() {
+        capaPan.className = 'pastel-capa pan ' + selectPan.value.toLowerCase();
+        capaRelleno.className = 'pastel-capa relleno ' + selectRelleno.value.toLowerCase();
+        capaCobertura.className = 'pastel-capa cobertura ' + selectCobertura.value.toLowerCase();
     }
 
-    function actualizarResumenCarrito() {
-        if (carritoCitas.length === 0) {
-            carritoResumen.innerHTML = '<p style="text-align: center; color: #555555; font-weight: bold;">No hay productos seleccionados.</p>';
-            renderAllQuantities();
-            actualizarFormularioOculto();
+    selectPan.addEventListener('change', actualizarPastel);
+    selectRelleno.addEventListener('change', actualizarPastel);
+    selectCobertura.addEventListener('change', actualizarPastel);
+
+
+    // LÓGICA DE LA API (POST /api/cotizar)
+    const btnCalcular = document.getElementById('btn-calcular-api');
+    const btnRealizarPedido = document.getElementById('btn-realizar-pedido');
+    const ticketDiv = document.getElementById('ticket-cotizacion');
+    const fechaContainer = document.getElementById('fecha-entrega-api-container');
+
+    let totalCalculado = 0;
+
+    // ACCIÓN 1: Calcular la Cotización
+    btnCalcular.addEventListener('click', async () => {
+        const personas = document.getElementById('api-personas').value;
+        const pan = selectPan.value;
+        const relleno = selectRelleno.value;
+        const cobertura = selectCobertura.value;
+
+        const checkboxes = document.querySelectorAll('input[name="eliminar_ingrediente"]:checked');
+        const ingredientesEliminados = Array.from(checkboxes).map(cb => cb.value);
+
+        const datos = {
+            personas: parseInt(personas),
+            pan: pan,
+            relleno: relleno,
+            cobertura: cobertura,
+            eliminar_ingrediente: ingredientesEliminados
+        };
+
+        try {
+            const response = await fetch('api/cotizar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            });
+
+            const resultado = await response.json();
+
+            if (resultado.exito) {
+                totalCalculado = resultado.desglose.costo_calculado;
+
+                let descuentoHTML = '';
+                if (resultado.desglose.descuento_aplicado > 0) {
+                    descuentoHTML = `
+                        <div class="ticket-fila" style="color: #28a745; font-weight: bold;">
+                            <span>Descuento:</span> 
+                            <span>-$${resultado.desglose.descuento_aplicado}</span>
+                        </div>
+                    `;
+                }
+
+                ticketDiv.innerHTML = `
+                    <h3 style="color: var(--accent);">🧾 Ticket de Cotización</h3>
+                    <div class="ticket-fila"><span>Personas:</span> <span>${resultado.desglose.personas}</span></div>
+                    <div class="ticket-fila"><span>Pan:</span> <span>${resultado.desglose.pan}</span></div>
+                    <div class="ticket-fila"><span>Relleno:</span> <span>${resultado.desglose.relleno}</span></div>
+                    <div class="ticket-fila"><span>Cobertura:</span> <span>${resultado.desglose.cobertura}</span></div>
+                    ${descuentoHTML}
+                    <div class="ticket-total">Total: $${resultado.desglose.costo_calculado} ${resultado.desglose.moneda}</div>
+                `;
+
+                // Mostrar el botón de pago y el input de fecha
+                btnRealizarPedido.style.display = 'block';
+                fechaContainer.style.display = 'block';
+
+            } else {
+                ticketDiv.innerHTML = `<p style="color:red; text-align:center;">Error: ${resultado.mensaje}</p>`;
+                btnRealizarPedido.style.display = 'none';
+                fechaContainer.style.display = 'none';
+            }
+        } catch (error) {
+            console.error("Error al cotizar:", error);
+            ticketDiv.innerHTML = `<p style="color:red; text-align:center;">Error de conexión.</p>`;
+        }
+    });
+
+    // ACCIÓN 2: Realizar Pedido (Guardar en Base de Datos)
+    btnRealizarPedido.addEventListener('click', async () => {
+        const fechaEntrega = document.getElementById('api-fecha-entrega').value;
+        const notas = document.getElementById('api-notas').value;
+
+        if (!fechaEntrega) {
+            alert('Por favor, selecciona una fecha de entrega.');
             return;
         }
 
-        let total = 0;
-        let totalItems = 0;
-        carritoResumen.innerHTML = '<h4>Productos Seleccionados:</h4>';
-        const lista = document.createElement('ul');
+        const checkboxes = document.querySelectorAll('input[name="eliminar_ingrediente"]:checked');
+        const ingredientesEliminados = Array.from(checkboxes).map(cb => cb.value);
 
-        carritoCitas.forEach((p, index) => {
-            const item = document.createElement('li');
-            item.innerHTML = `
-                ${p.cantidad} x ${p.nombre} - $${(p.precio * p.cantidad).toFixed(2)}
-                <button type="button" class="btn-remover-item" data-index="${index}" aria-label="Eliminar ${p.nombre} del carrito" style="margin-left: 10px; color: #d32f2f; cursor:pointer; background:none; border:none; font-size: 1.2em;">&times;</button>
-            `;
-            lista.appendChild(item);
-            total += p.precio * p.cantidad;
-            totalItems += p.cantidad;
-        });
+        const datosPedido = {
+            personas: parseInt(document.getElementById('api-personas').value) || 10,
+            pan: selectPan.value,
+            relleno: selectRelleno.value,
+            cobertura: selectCobertura.value,
+            eliminar_ingrediente: ingredientesEliminados,
+            notas: notas,
+            fecha: fechaEntrega
+        };
 
-        carritoResumen.appendChild(lista);
-        
-        let descuentoPorcentaje = 0;
-        if (totalItems >= 24) {
-            descuentoPorcentaje = 0.10;
-        } else if (totalItems >= 12) {
-            descuentoPorcentaje = 0.05;
-        }
-        
-        let descuentoMonto = total * descuentoPorcentaje;
-        let granTotal = total - descuentoMonto;
+        try {
+            const response = await fetch(window.BASE_URL + 'citas/crearStripeSession', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datosPedido)
+            });
 
-        const totalDiv = document.createElement('div');
-        totalDiv.style.marginTop = '10px';
-        totalDiv.style.textAlign = 'right';
-        
-        if (descuentoPorcentaje > 0) {
-            totalDiv.innerHTML = `
-                <div style="color: #666; font-size: 0.95em;">Subtotal: $${total.toFixed(2)}</div>
-                <div style="color: #E91E63; font-weight: 600; font-size: 0.95em;">Descuento (${descuentoPorcentaje * 100}%): -$${descuentoMonto.toFixed(2)}</div>
-                <strong style="display:block; font-size: 1.2em; margin-top: 4px; color: #1f2937;">Total Final: $${granTotal.toFixed(2)}</strong>
-            `;
-        } else {
-            totalDiv.innerHTML = `
-                <strong style="display:block; font-size: 1.1em; color: #1f2937;">Total: $${granTotal.toFixed(2)}</strong>
-            `;
-        }
-        
-        carritoResumen.appendChild(totalDiv);
+            const resultado = await response.json();
 
-        renderAllQuantities();
-        // Actualizar campos ocultos en el formulario
-        actualizarFormularioOculto();
-    }
-
-    carritoResumen.addEventListener('click', function(e) {
-        if (e.target.classList.contains('btn-remover-item')) {
-            const index = parseInt(e.target.dataset.index, 10);
-            carritoCitas.splice(index, 1);
-            actualizarResumenCarrito();
+            if (resultado.success && resultado.id) {
+                const stripe = Stripe(window.STRIPE_PUBLIC_KEY);
+                stripe.redirectToCheckout({ sessionId: resultado.id }).then(result => {
+                    if (result.error) {
+                        alert("Error de Stripe: " + result.error.message);
+                    }
+                });
+            } else {
+                alert("Error: " + (resultado.error || 'No se pudo iniciar el pago.'));
+            }
+        } catch (error) {
+            console.error("Error en el pago:", error);
+            alert("Ocurrió un error al intentar procesar el pago.");
         }
     });
 
-    function actualizarFormularioOculto() {
-        // Limpiar campos ocultos existentes
-        const oldInputs = form.querySelectorAll('input[name="product_id[]"], input[name="cantidad[]"]');
-        oldInputs.forEach(input => input.remove());
+    // LÓGICA DE LOS PAQUETES PREDEFINIDOS
+    const tarjetas = document.querySelectorAll('.paquete-card');
+    const panelVacio = document.getElementById('panel-reserva-vacio');
+    const panelReserva = document.getElementById('form-reserva-paquete');
+    const tituloPaquete = document.getElementById('paquete-seleccionado-titulo');
+    const descPaquete = document.getElementById('paquete-seleccionado-desc');
+    const totalEstimado = document.getElementById('paquete-total-estimado');
+    const inputPersonas = document.getElementById('paquete-personas');
+    const btnReservarPaquete = document.getElementById('btn-reservar-paquete');
 
-        // Agregar nuevos campos
-        carritoCitas.forEach(p => {
-            const idInput = document.createElement('input');
-            idInput.type = 'hidden';
-            idInput.name = 'product_id[]';
-            idInput.value = p.id;
-            form.appendChild(idInput);
+    let precioBaseSeleccionado = 0;
+    let paqueteSeleccionadoNombre = '';
+    let paqueteSeleccionadoId = 0;
 
-            const qtyInput = document.createElement('input');
-            qtyInput.type = 'hidden';
-            qtyInput.name = 'cantidad[]'; // IMPORTANT: This matches what CitasController.php expects
-            qtyInput.value = p.cantidad;
-            form.appendChild(qtyInput);
+    tarjetas.forEach(tarjeta => {
+        tarjeta.addEventListener('click', () => {
+            tarjetas.forEach(t => t.classList.remove('active'));
+            tarjeta.classList.add('active');
+
+            paqueteSeleccionadoNombre = tarjeta.getAttribute('data-paquete-nombre') || tarjeta.getAttribute('data-paquete');
+            paqueteSeleccionadoId = parseInt(tarjeta.getAttribute('data-paquete-id') || tarjeta.getAttribute('data-id'));
+            precioBaseSeleccionado = parseInt(tarjeta.getAttribute('data-paquete-precio') || tarjeta.getAttribute('data-precio'));
+            const desc = tarjeta.getAttribute('data-paquete-desc') || tarjeta.getAttribute('data-desc');
+
+            panelVacio.style.display = 'none';
+            panelReserva.style.display = 'block';
+
+            tituloPaquete.innerText = `Paquete: ${paqueteSeleccionadoNombre}`;
+            descPaquete.innerText = desc;
+            calcularTotalPaquete();
         });
-    }
-
-    // --- Lógica del formulario de citas ---
-    const tipoSelect = document.getElementById('tipoEvento');
-    const otroContainer = document.getElementById('otroContainer');
-    const otroInput = document.getElementById('otroEvento');
-
-    if (tipoSelect) {
-        tipoSelect.addEventListener('change', function(){
-            if (tipoSelect.value === 'Otro') {
-                if (otroContainer) otroContainer.style.display = 'block';
-                if (otroInput) otroInput.setAttribute('required','required');
-            } else {
-                if (otroContainer) otroContainer.style.display = 'none';
-                if (otroInput) otroInput.removeAttribute('required');
-            }
-        });
-        // Disparar change al cargar para el estado inicial
-        tipoSelect.dispatchEvent(new Event('change'));
-    }
-
-    // --- Lógica de "Ver más..." en descripciones ---
-    setTimeout(() => {
-        document.querySelectorAll('.producto-desc-text').forEach(el => {
-            // Check if text is overflowing its 2-line clamp
-            if (el.scrollHeight > el.clientHeight + 2) {
-                const btn = el.nextElementSibling;
-                if (btn && btn.classList.contains('btn-ver-mas-desc')) {
-                    btn.style.display = 'inline-block';
-                }
-            }
-        });
-    }, 100);
-
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('btn-ver-mas-desc')) {
-            e.preventDefault();
-            const textEl = e.target.previousElementSibling;
-            if (textEl.style.webkitLineClamp === '2' || textEl.style.webkitLineClamp === '') {
-                textEl.style.webkitLineClamp = 'unset';
-                textEl.style.maxHeight = 'none';
-                e.target.textContent = 'Ver menos';
-                e.target.setAttribute('aria-expanded', 'true');
-            } else {
-                textEl.style.webkitLineClamp = '2';
-                textEl.style.maxHeight = '2.8em';
-                e.target.textContent = 'Ver más...';
-                e.target.setAttribute('aria-expanded', 'false');
-            }
-        }
     });
 
-    if (form) {
-        form.addEventListener('submit', function(e){
-            // Ensure cart is not empty before submitting
-            if (carritoCitas.length === 0) {
-                if (typeof customAlert === 'function') {
-                    customAlert('Debes seleccionar al menos un producto para tu pedido.', 'Error de validación');
-                } else {
-                    alert('Debes seleccionar al menos un producto para tu pedido.');
-                }
-                e.preventDefault();
-            }
-        });
+    inputPersonas.addEventListener('input', calcularTotalPaquete);
+
+    function calcularTotalPaquete() {
+        let personas = parseInt(inputPersonas.value) || 0;
+        let total = precioBaseSeleccionado;
+        if (personas > 20) {
+            total += (personas - 20) * 20;
+        }
+        totalEstimado.innerText = `$${total}`;
     }
+
+    btnReservarPaquete.addEventListener('click', async () => {
+        const fecha = document.getElementById('paquete-fecha').value;
+        const personas = parseInt(inputPersonas.value) || 20;
+
+        if (!fecha) {
+            alert('Por favor, selecciona una fecha para tu evento.');
+            return;
+        }
+
+        const totalNeto = parseInt(totalEstimado.innerText.replace(/[^0-9.-]+/g, ""));
+
+        const datosPaquete = {
+            paquete_id: paqueteSeleccionadoId,
+            paquete_nombre: paqueteSeleccionadoNombre,
+            paquete_precio: precioBaseSeleccionado,
+            paquete_desc: document.getElementById('paquete-seleccionado-desc').innerText,
+            fecha: fecha,
+            personas: personas
+        };
+
+        try {
+            const response = await fetch(window.BASE_URL + 'citas/crearStripeSessionPaquete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datosPaquete)
+            });
+
+            const resultado = await response.json();
+
+            if (resultado.success && resultado.id) {
+                const stripe = Stripe(window.STRIPE_PUBLIC_KEY);
+                stripe.redirectToCheckout({ sessionId: resultado.id }).then(result => {
+                    if (result.error) {
+                        alert("Error de Stripe: " + result.error.message);
+                    }
+                });
+            } else {
+                alert("Error: " + (resultado.error || 'No se pudo iniciar el pago del paquete.'));
+            }
+        } catch (error) {
+            console.error("Error al procesar el paquete:", error);
+            alert("Hubo un error de conexión con el servidor.");
+        }
+    });
 });
