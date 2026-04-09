@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    # If your app is in a subfolder, set RewriteBase to that folder (example: /PastelesUPBC/)
+    # If your app is in a subfolder, set RewriteBase to that folder (example: /LottaGourmet/)
     # RewriteBase /
 
     # Don't rewrite existing files or directories

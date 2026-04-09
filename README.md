@@ -17,7 +17,7 @@ Adicionalmente, el sistema se integra con una pasarela de pagos vía **Stripe Ch
 ## 📂 Estructura del Proyecto
 
 ```text
-PastelesUPBC/
+LottaGourmet/
 ├── Config/            # Archivos de configuración (Database, App, Constantes)
 ├── Controller/        # Controladores que enlazan Modelos con Vistas
 ├── Model/             # Modelos de datos y reglas de negocio
@@ -36,14 +36,14 @@ PastelesUPBC/
 ## ⚙️ Configuración e Instalación
 
 ### 1. Preparar el Entorno
-1. Clona, descarga o mueve esta carpeta hasta que quede alojada justo en `C:\xampp\htdocs\PastelesUPBC`.
-2. Renombra la carpeta a `PastelesUPBC` (si no se llama así) para evitar inconsistencias con las rutas base por defecto.
+1. Clona, descarga o mueve esta carpeta hasta que quede alojada justo en `C:\xampp\htdocs\LottaGourmet`.
+2. Renombra la carpeta a `LottaGourmet` (si no se llama así) para evitar inconsistencias con las rutas base por defecto.
 
 ### 2. Base de Datos
 1. Abre el panel de control de **XAMPP** e inicia de manera simultánea `Apache` y `MySQL`.
 2. Ve a [http://localhost/phpmyadmin](http://localhost/phpmyadmin).
-3. Crea una base de datos nueva llamada `pastelesupbc`.
-4. Importa en esa base de datos recién creada el script SQL de respaldo provisto con el proyecto o (`pastelesupbc.sql`).
+3. Crea una base de datos nueva llamada `lottagourmet`.
+4. Importa en esa base de datos recién creada el script SQL de respaldo provisto con el proyecto o (`lottagourmet.sql`).
 
 ### 3. Conexiones a la BD (Database.php)
 Debes verificar que el entorno coincida dentro del archivo `Config/Database.php`. La clase `Database` maneja la conexión. Tienes dos plantillas en caso de subir este desarrollo a producción:
@@ -53,7 +53,7 @@ Debes verificar que el entorno coincida dentro del archivo `Config/Database.php`
 <?php
 class Database {
     private $host = "localhost";
-    private $db_name = "pastelesupbc";
+    private $db_name = "lottagourmet";
     private $username = "root";
     private $password = "";
     public $conn;
@@ -63,11 +63,11 @@ class Database {
 ?>
 ```
 
-**Para Despliegue en Producción (ByetHost): OLD**
+**Para Despliegue en Producción (ByetHost):**
 ```php
 <?php
 class Database {
-    private $host = "pastelesupbc.byethost24.com";
+    private $host = "lottagourmet.byethost24.com";
     private $db_name = "sql202.byethost24.com";
     private $username = "b24_40405106";
     private $password = "bf86ph1n";

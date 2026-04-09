@@ -77,7 +77,7 @@ if (isset($url[0]) && !empty($url[0])) {
         $metodo = 'nosotros';
     }
 
-     // habilitar ruta http://localhost/PastelesUPBC/api/cotizar
+     // habilitar ruta http://localhost/LottaGourmet/api/cotizar
     elseif ($url[0] == 'api' && isset($url[1])) {
         $controlador = 'ApiController';
         if ($url[1] == 'cotizar') {
