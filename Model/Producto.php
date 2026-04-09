@@ -78,6 +78,7 @@ class Producto {
     public function obtenerMasVendidos($limit = 4) {
         $query = "SELECT id_producto, nombre, descripcion, precio, stock, imagen
                   FROM " . $this->table_name . "
+                  WHERE nombre != 'Pedido personalizado'
                   ORDER BY id_producto DESC
                   LIMIT :lim";
 
