@@ -1,11 +1,13 @@
 <?php
-class PedidosController {
+class PedidosController
+{
 
     /**
      * Muestra los pedidos del usuario logueado
      * URL: /pedidos/mis-pedidos
      */
-    public function misPedidos() {
+    public function misPedidos()
+    {
         require_once 'Config/App.php';
         require_once 'Config/Database.php';
 
@@ -37,9 +39,9 @@ class PedidosController {
             // Obtener pedidos (citas/eventos) directamente por id_usuario
             $queryPedidos = "SELECT p.*, 
                                    pa.nombre as nombre_paquete,
-                                   (SELECT SUM(dp.cantidad * dp.precio_unitario) 
+                                   COALESCE(p.total_cotizado, (SELECT SUM(dp.cantidad * dp.precio_unitario) 
                                     FROM detalle_pedidos dp 
-                                    WHERE dp.id_pedido = p.id_pedido) as total
+                                    WHERE dp.id_pedido = p.id_pedido)) as total
                             FROM pedidos p
                             LEFT JOIN paquetes_eventos pa ON p.id_paquete = pa.id_paquete
                             WHERE p.id_usuario = :id_usuario

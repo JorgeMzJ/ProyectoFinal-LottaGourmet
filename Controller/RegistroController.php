@@ -38,8 +38,8 @@ class RegistroController {
             if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors['email'] = 'Email inválido.';
             if ($telefono === '') {
                 $errors['telefono'] = 'El teléfono es requerido.';
-            } elseif (!preg_match('/^\d{10,15}$/', $telefono)) {
-                $errors['telefono'] = 'El teléfono debe contener solo dígitos (10 a 15).';
+            } elseif (!preg_match('/^\+?\d{10,15}$/', $telefono)) {
+                $errors['telefono'] = 'El teléfono debe contener de 10 a 15 dígitos (puede iniciar con +).';
             }
             if (strlen($password) < 6) $errors['password'] = 'La contraseña debe tener al menos 6 caracteres.';
             if ($password !== $confirm) $errors['confirmPassword'] = 'Las contraseñas no coinciden.';

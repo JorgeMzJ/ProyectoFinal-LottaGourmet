@@ -83,7 +83,7 @@ class LoginController {
         <body>
         <script>
             try {
-                localStorage.removeItem("pastelesupbc_carrito");
+                localStorage.removeItem("lottagourmet_carrito");
                 sessionStorage.removeItem("usuario_logueado");
             } catch(e) {}
             window.location.href = "' . BASE_URL . 'inicio";
