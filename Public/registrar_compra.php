@@ -3,7 +3,7 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Methods: POST');
 
-$host = "localhost"; $user = "root"; $pass = ""; $db = "pastelesupbc";
+$host = "localhost"; $user = "root"; $pass = ""; $db = "lottagourmet";
 $conn = new mysqli($host, $user, $pass, $db);
 
 $input = file_get_contents('php://input');

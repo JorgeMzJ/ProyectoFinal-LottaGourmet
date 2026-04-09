@@ -3,7 +3,7 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=utf-8');
 
 // Credenciales XAMPP Local
-$host = "localhost"; $user = "root"; $pass = ""; $db_name = "pastelesupbc";
+$host = "localhost"; $user = "root"; $pass = ""; $db_name = "lottagourmet";
 
 $conn = new mysqli($host, $user, $pass, $db_name);
 
