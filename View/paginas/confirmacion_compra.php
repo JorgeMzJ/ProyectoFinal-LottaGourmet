@@ -355,7 +355,10 @@ foreach ($carrito as $item) {
 }
 </style>
 
+<script src="https://js.stripe.com/v3/"></script>
 <script>
+const stripe = Stripe('<?php echo STRIPE_PUBLIC_KEY; ?>');
+
 let redirigirAMenu = false;
 
 function mostrarModal(titulo, mensaje, exito = false) {
@@ -368,29 +371,20 @@ function mostrarModal(titulo, mensaje, exito = false) {
 function cerrarModal() {
     document.getElementById('notificacionModal').style.display = 'none';
     if (redirigirAMenu) {
-        // Limpiar localStorage del carrito (usar la MISMA clave que carrito.js)
-        try {
-            localStorage.removeItem('pastelesupbc_carrito');
-            console.log('Carrito eliminado del localStorage');
-        } catch (e) {
-            console.error('Error al limpiar carrito:', e);
-        }
-        
-        // Asegurar que el contador del carrito se actualice
         window.location.href = '<?php echo BASE_URL; ?>menu';
     }
 }
 
 function confirmarCompra() {
     console.log('Iniciando confirmación de compra...');
-    
-    // Deshabilitar botón para evitar doble clic
+
     const btnConfirmar = document.querySelector('.btn-proceder');
+    const previousText = btnConfirmar ? btnConfirmar.textContent : 'Procesando...';
     if (btnConfirmar) {
         btnConfirmar.disabled = true;
         btnConfirmar.textContent = 'Procesando...';
     }
-    
+
     fetch('<?php echo BASE_URL; ?>compras/procesar', {
         method: 'POST',
         headers: {
@@ -406,32 +400,32 @@ function confirmarCompra() {
     })
     .then(data => {
         console.log('Datos recibidos:', data);
-        if (data.success) {
-            // Limpiar carrito INMEDIATAMENTE antes de mostrar modal (MISMA clave que carrito.js)
-            try {
-                localStorage.removeItem('pastelesupbc_carrito');
-                console.log('Carrito limpiado exitosamente');
-            } catch (e) {
-                console.error('Error limpiando carrito:', e);
-            }
-            mostrarModal('¡Éxito!', '¡Compra realizada con éxito! Gracias por tu preferencia.', true);
+        if (data.success && data.id) {
+            stripe.redirectToCheckout({ sessionId: data.id }).then(result => {
+                if (result.error) {
+                    console.error('Stripe error:', result.error);
+                    if (btnConfirmar) {
+                        btnConfirmar.disabled = false;
+                        btnConfirmar.textContent = previousText;
+                    }
+                    mostrarModal('Error de Stripe', result.error.message || 'No se pudo redirigir al pago.');
+                }
+            });
         } else {
-            // Re-habilitar botón en caso de error
             if (btnConfirmar) {
                 btnConfirmar.disabled = false;
-                btnConfirmar.innerHTML = '<span>✓</span> Confirmar y pagar';
+                btnConfirmar.textContent = previousText;
             }
-            mostrarModal('Error', 'Error al procesar la compra: ' + (data.error || 'Intenta nuevamente'), false);
+            mostrarModal('Error', 'Error al procesar la compra: ' + (data.error || 'Intenta nuevamente'));
         }
     })
     .catch(err => {
         console.error('Error completo:', err);
-        // Re-habilitar botón en caso de error
         if (btnConfirmar) {
             btnConfirmar.disabled = false;
-            btnConfirmar.innerHTML = '<span>✓</span> Confirmar y pagar';
+            btnConfirmar.textContent = previousText;
         }
-        mostrarModal('Error de conexión', err.message + '. Por favor intenta nuevamente.', false);
+        mostrarModal('Error de conexión', err.message + '. Por favor intenta nuevamente.');
     });
 }
 </script>

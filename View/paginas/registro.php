@@ -32,21 +32,22 @@ $success = isset($_GET['success']) || isset($_SESSION['registro_success']);
     <form action="<?php echo BASE_URL; ?>registro/guardar" method="post" id="registroForm" novalidate>
         <div class="form-group">
             <label for="nombre">Nombre completo:</label>
-            <input type="text" id="nombre" name="nombre" required value="<?php echo htmlspecialchars($old['nombre'] ?? ''); ?>">
+            <input type="text" id="nombre" name="nombre" required
+                value="<?php echo htmlspecialchars($old['nombre'] ?? ''); ?>">
         </div>
 
         <div class="form-group">
             <label for="email">Correo electrónico:</label>
-            <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($old['email'] ?? ''); ?>">
+            <input type="email" id="email" name="email" required
+                value="<?php echo htmlspecialchars($old['email'] ?? ''); ?>">
         </div>
 
 
         <div class="form-group">
             <label for="telefono">Teléfono:</label>
-            <input type="tel" id="telefono" name="telefono" required 
-                   pattern="\d{10,15}" maxlength="15" inputmode="numeric"
-                   title="Ingresa solo dígitos (10 a 15)" 
-                   value="<?php echo htmlspecialchars($old['telefono'] ?? ''); ?>">
+            <input type="tel" id="telefono" name="telefono" required pattern="\+?\d{10,13}" maxlength="13"
+                inputmode="tel" title="Ingresa de 10 a 13 dígitos (puede iniciar con +)"
+                value="<?php echo htmlspecialchars($old['telefono'] ?? ''); ?>">
         </div>
 
         <div class="form-group">
